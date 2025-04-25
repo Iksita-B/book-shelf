@@ -8,6 +8,7 @@ import '../App.css';
 function Home() {
   const [books, setBooks] = useState([]);
   const [filters, setFilters] = useState({ genre: '', status: '', reaction: '' });
+  const [search, setSearch] = useState('');
   const navigate = useNavigate();
 
   const handleDelete = (deletedId) => {
@@ -24,7 +25,8 @@ function Home() {
     return (
       (filters.genre === '' || book.genre === filters.genre) &&
       (filters.status === '' || book.status === filters.status) &&
-      (filters.reaction === '' || book.reaction === filters.reaction)
+      (filters.reaction === '' || book.reaction === filters.reaction) &&
+      (search === '' || book.title.toLowerCase().includes(search.toLowerCase()) || book.author.toLowerCase().includes(search.toLowerCase()))
     );
   });
 
@@ -34,7 +36,7 @@ function Home() {
 
       <FilterBar filters={filters} setFilters={setFilters} />
 
-      <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+      <div className="add-search">
         <button
           onClick={() => navigate('/add')}
           style={{
@@ -50,6 +52,7 @@ function Home() {
         >
           ➕ Add Book
         </button>
+        <input value={search} className="search-books" placeholder="Search..." onChange={(e) => setSearch(e.target.value)}/>
       </div>
 
       <div className="books-grid">

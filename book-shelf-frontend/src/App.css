@@ -64,3 +64,31 @@ h2 {
   gap: 1.5rem;
 }
 
+.search-books {
+  width: 50%;
+  padding: 0.7rem 1.1rem;
+  border-radius: 10px;
+  border: none;
+  background-color: #e9f0f7;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 0.9rem;
+}
+
+.search-books:focus {
+  outline: none;  
+  background-color: #cbe0f5;
+}
+
+.search-books:hover {
+  background-color: #cbe0f5;
+}
+
+.add-search {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  text-align: center;
+  margin-bottom: 20px;
+  align-items: center;
+}
+
