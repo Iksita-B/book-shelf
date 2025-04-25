@@ -32,16 +32,30 @@ function AddBook() {
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
     } else {
-      const newBook = { title, author, genre, status, description, reaction };
+      const newBook = {
+        title,
+        author,
+        genre,
+        status,
+        description,
+        reaction
+      };
+  
+      // Add startDate if status is "Reading"
+      if (status === 'Reading') {
+        newBook.startDate = new Date().toISOString(); // sets current date
+      }
+  
+      // Add endDate if status is "Read"
       if (status === 'Read') {
         newBook.endDate = finishedDate;
       }
   
       try {
-        await axios.post('http://localhost:5000/api/books', newBook); // backend endpoint
+        await axios.post('http://localhost:5000/api/books', newBook);
         alert('Book added successfully!');
         
-        // Clear form after successful submission
+        // Clear form after submission
         setTitle('');
         setAuthor('');
         setGenre('');
@@ -55,7 +69,7 @@ function AddBook() {
         alert('Failed to add book. Please try again.');
       }
     }
-  };
+  };  
 
   // Back button handler to go to the previous page
   const handleBackButton = () => {
