@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import BookCard from '../Components/BookCard';
 import FilterBar from '../Components/FilterBar';
+import Masonry from 'react-masonry-css';
 import '../App.css';
 
 function Home() {
@@ -10,6 +11,12 @@ function Home() {
   const [filters, setFilters] = useState({ genre: '', status: '', reaction: '' });
   const [search, setSearch] = useState('');
   const navigate = useNavigate();
+
+  const breakpoints = {
+    default: 3,
+    1100: 2,
+    700: 1
+  };
 
   const handleDelete = (deletedId) => {
     setBooks(prevBooks => prevBooks.filter(book => book._id !== deletedId));
@@ -55,11 +62,11 @@ function Home() {
         <input value={search} className="search-books" placeholder="Search..." onChange={(e) => setSearch(e.target.value)}/>
       </div>
 
-      <div className="books-grid">
+      <Masonry breakpointCols={breakpoints} className="masonry-grid" columnClassName="masonry-column">
         {filteredBooks.map(book => (
-          <BookCard key={book._id} book={book} onDelete={handleDelete}/>
-        ))}
-      </div>
+            <BookCard key={book._id} book={book} onDelete={handleDelete}/>
+          ))}
+      </Masonry>
     </div>
   );
 }

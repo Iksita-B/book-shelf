@@ -58,10 +58,13 @@ h2 {
   background-color: #5848f4;
 }
 
-.books-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 1.5rem;
+.masonry-grid {
+  display: flex;
+  gap: 1rem;
+}
+
+.masonry-column {
+  background-clip: padding-box;
 }
 
 .search-books {
