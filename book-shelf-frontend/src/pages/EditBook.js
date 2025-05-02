@@ -14,19 +14,24 @@ const EditBook = () => {
     status: '',
     reaction: '',
     description: '',
-    finishedDate: ''
+    endDate: ''
   });
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [error, setError] = useState('');
 
   useEffect(() => {
     axios.get(`http://localhost:5000/api/books/${id}`)
-      .then(res => setBookData(res.data))
+      .then(res => {
+        const data = res.data;
+        const formattedDate = data.endDate ? new Date(data.endDate).toISOString().split('T')[0] : '';
+        setBookData({ ...data, endDate: formattedDate });
+      })
       .catch(err => {
         console.error(err);
         setError('Failed to fetch book details.');
       });
   }, [id]);
+  
 
   const handleChange = (e) => {
     setBookData({ ...bookData, [e.target.name]: e.target.value });
@@ -35,20 +40,25 @@ const EditBook = () => {
   const handleUpdate = async (e) => {
     e.preventDefault();
     const { title, author, genre, status } = bookData;
-
+  
     if (!title || !author || !genre || !status) {
       setError('Please fill in all required fields.');
       return;
     }
-
+  
+    const updatedBookData = {
+      ...bookData,
+      endDate: status === "Read" ? bookData.endDate : ""
+    };
+  
     try {
-      await axios.put(`http://localhost:5000/api/books/${id}`, bookData);
+      await axios.put(`http://localhost:5000/api/books/${id}`, updatedBookData);
       navigate('/');
     } catch (err) {
       console.error(err);
       setError('Error updating the book.');
     }
-  };
+  };  
 
   const handleEmojiSelect = (emoji) => {
     setBookData({ ...bookData, reaction: emoji });
@@ -99,16 +109,17 @@ const EditBook = () => {
           </select>
         </div>
 
-        <div className="form-group">
-          <label>Finished Date</label>
-          <input
-            type="date"
-            name="endDate"
-            value={bookData.endDate}
-            onChange={handleChange}
-            disabled={bookData.status !== "Read"}
-          />
-        </div>
+        {bookData.status === "Read" && (
+          <div className="form-group">
+            <label>Finished Date</label>
+            <input
+              type="date"
+              name="endDate"
+              value={bookData.endDate}
+              onChange={handleChange}
+            />
+          </div>
+        )}
 
         <div className="form-group">
           <label>Description</label>

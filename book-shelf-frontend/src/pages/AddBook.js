@@ -16,13 +16,13 @@ function AddBook() {
 
   const validateForm = () => {
     const newErrors = {};
-    if (!title) newErrors.title = 'Book title is required';
-    if (!author) newErrors.author = 'Author name is required';
+    if (!title.trim()) newErrors.title = 'Book title is required';
+    if (!author.trim()) newErrors.author = 'Author name is required';
     if (!genre) newErrors.genre = 'Genre is required';
     if (!status) newErrors.status = 'Status is required';
-    
+    if (status === 'Read' && !finishedDate) newErrors.finishedDate = 'Finished date is required';
     return newErrors;
-  };
+  };  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -47,9 +47,9 @@ function AddBook() {
       }
   
       // Add endDate if status is "Read"
-      if (status === 'Read') {
-        newBook.endDate = finishedDate;
-      }
+      if (status === 'Read' && finishedDate) {
+        newBook.endDate = new Date(finishedDate).toISOString();
+      }      
   
       try {
         await axios.post('http://localhost:5000/api/books', newBook);
@@ -145,17 +145,16 @@ function AddBook() {
 
         {status === 'Read' && (
           <div className="form-group">
-            <label>Finished Date</label>
+            <label>Finished Date*</label>
             <input 
               type="date" 
               value={finishedDate} 
               onChange={(e) => setFinishedDate(e.target.value)} 
-              required 
             />
             {errors.finishedDate && <p className="error">{errors.finishedDate}</p>}
           </div>
         )}
-
+        
         <div className="form-group">
           <label>Description</label>
           <textarea 
